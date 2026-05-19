@@ -35,9 +35,7 @@ Le site est alors accessible sur http://localhost:8888
 
 Il y a aussi un fichier RUSHIFY - Lancer le site.bat sur le Bureau qui démarre automatiquement MySQL et PHP en double-cliquant dessus.
 
-Les identifiants du panel d'administration :
-    Identifiant : superadmin
-    Mot de passe : Admin@Rushify2025
+Les identifiants du panel d'administration sont transmis séparément à l'administrateur pour des raisons de sécurité. Ils ne sont pas stockés dans la documentation.
 
 
 ---------------------------------------------------------------
