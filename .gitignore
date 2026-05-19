@@ -1,0 +1,17 @@
+# Uploads utilisateurs (photos produits)
+uploads/products/*
+!uploads/products/.gitkeep
+
+# Config locale (à personnaliser sur chaque machine)
+config/database.php
+
+# Logs PHP
+*.log
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dépendances Node (si ajoutées plus tard)
+node_modules/

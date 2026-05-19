@@ -1,0 +1,170 @@
+/* RUSHIFY Admin Panel CSS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:#F5F5F5;color:#111;font-size:14px;display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;flex-shrink:0;background:#1E3528;display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.1);font-weight:800;font-size:15px;color:#fff}
+.s-icon{width:32px;height:32px;background:#8B1A2F;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+.s-avatar{width:34px;height:34px;background:#8B1A2F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0}
+.s-name{font-size:13px;font-weight:700;color:#fff}
+.s-role{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px}
+.sidebar-nav{padding:10px 8px;flex:1}
+.nav-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.3);padding:12px 10px 4px}
+.nav-link{display:block;padding:10px 12px;border-radius:8px;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;text-decoration:none;transition:all .15s;margin-bottom:2px}
+.nav-link:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-link.active{background:rgba(139,26,47,.25);color:#fff;font-weight:700}
+.logout-link{display:block;padding:14px 18px;color:rgba(139,26,47,.75);font-size:13px;font-weight:600;text-decoration:none;border-top:1px solid rgba(255,255,255,.1);transition:color .15s}
+.logout-link:hover{color:#8B1A2F}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{background:#fff;border-bottom:1px solid #e0e0e0;padding:0 24px;height:56px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:15px;font-weight:700;color:#111;flex:1}
+.menu-toggle{background:none;border:none;font-size:20px;cursor:pointer;display:none;color:#666}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-user{font-size:13px;color:#666}
+.topbar-logout{font-size:13px;color:#8B1A2F;text-decoration:none;font-weight:600}
+.topbar-logout:hover{text-decoration:underline}
+.content{flex:1;padding:24px 28px;max-width:1400px;width:100%}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.page-header h1{font-size:20px;font-weight:900;color:#111;letter-spacing:-.3px}
+.page-header p{font-size:13px;color:#666;margin-top:2px}
+.live-badge{background:rgba(46,160,67,.15);color:#2EA043;border:1px solid rgba(46,160,67,.3);border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.count-badge{background:rgba(0,0,0,.08);border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;margin-left:6px}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:14px;padding:20px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:700;color:#111;margin-bottom:14px}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid #e0e0e0;border-radius:14px;padding:18px;display:flex;gap:14px;align-items:center;transition:all .15s}
+.kpi:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);transform:translateY(-2px)}
+.kpi-icon{font-size:24px;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kpi-green    .kpi-icon{background:rgba(46,160,67,.12)}
+.kpi-bordeaux .kpi-icon{background:rgba(139,26,47,.1)}
+.kpi-blue     .kpi-icon{background:rgba(56,139,253,.12)}
+.kpi-yellow   .kpi-icon{background:rgba(210,153,34,.15)}
+.kpi-red      .kpi-icon{background:rgba(218,54,51,.12)}
+.kpi-label{font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi-val{font-size:24px;font-weight:900;color:#111;letter-spacing:-.5px}
+.kpi-sub{font-size:11px;color:#888;margin-top:2px}
+.kpi-green    .kpi-val{color:#1E7820}
+.kpi-bordeaux .kpi-val{color:#8B1A2F}
+
+/* ── CHARTS ROW ── */
+.charts-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.charts-row .card{flex:1;min-width:260px}
+
+/* ── TABLES ── */
+.admin-table{width:100%;border-collapse:collapse}
+.admin-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#666;background:#f9f9f9;border-bottom:1px solid #e0e0e0}
+.admin-table td{padding:12px 14px;border-bottom:1px solid #f0f0f0;font-size:13px;vertical-align:middle}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-table tr:hover td{background:#fafafa}
+.empty-cell{text-align:center;padding:40px!important;color:#999;font-size:14px}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.filter-bar .field{margin:0;flex:1;min-width:160px}
+
+/* ── FORMS ── */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px;color:#333}
+.field input,.field select,.field textarea{width:100%;background:#f5f5f5;border:1.5px solid #e0e0e0;border-radius:8px;padding:10px 14px;color:#111;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus{border-color:#8B1A2F;background:#fff;box-shadow:0 0 0 3px rgba(139,26,47,.08)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;border:1.5px solid transparent;transition:all .15s;text-decoration:none;white-space:nowrap;font-family:inherit}
+.btn-primary{background:#8B1A2F;color:#fff;border-color:#8B1A2F}
+.btn-primary:hover{background:#7A1526;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:#333;border-color:#e0e0e0}
+.btn-outline:hover{border-color:#8B1A2F;color:#8B1A2F}
+.btn-danger{background:#DA3633;color:#fff;border-color:#DA3633}
+.btn-danger:hover{background:#b52b28}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-login{width:100%;padding:13px;background:#8B1A2F;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s}
+.btn-login:hover{background:#7A1526}
+
+/* ── BADGES & STATUS ── */
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.badge-ok{background:rgba(46,160,67,.15);color:#1E7820}
+.badge-warn{background:rgba(218,54,51,.15);color:#c0302d}
+.status-badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;text-transform:uppercase}
+.status-active{background:rgba(46,160,67,.15);color:#1E7820}
+.status-expired{background:rgba(0,0,0,.06);color:#666}
+.status-cancelled{background:rgba(218,54,51,.15);color:#c0302d}
+.status-sold_out{background:rgba(210,153,34,.15);color:#8a6e00}
+.status-pending{background:rgba(56,139,253,.15);color:#1a5fc8}
+.status-confirmed{background:rgba(46,160,67,.15);color:#1E7820}
+.status-completed{background:rgba(28,61,44,.12);color:#1E3528}
+.action-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;font-family:monospace}
+.action-green{background:rgba(46,160,67,.15);color:#1E7820}
+.action-red{background:rgba(218,54,51,.15);color:#c0302d}
+.action-yellow{background:rgba(210,153,34,.15);color:#8a6e00}
+.action-blue{background:rgba(56,139,253,.15);color:#1a5fc8}
+.action-muted{background:rgba(0,0,0,.06);color:#888}
+
+/* ── MINI PROGRESS BAR ── */
+.mini-bar-wrap{height:5px;background:#eee;border-radius:999px;overflow:hidden;width:80px;display:inline-block;vertical-align:middle;margin-right:4px}
+.mini-bar{height:100%;background:linear-gradient(90deg,#1E3528,#2E7820);border-radius:999px}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;gap:6px;justify-content:center;padding:16px 0}
+.page-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:#fff;border:1px solid #e0e0e0;font-size:13px;font-weight:600;color:#333;text-decoration:none;transition:all .15s}
+.page-btn:hover{border-color:#8B1A2F;color:#8B1A2F}
+.page-btn.active{background:#8B1A2F;border-color:#8B1A2F;color:#fff}
+
+/* ── LOGIN PAGE ── */
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#1E3528}
+.login-box{background:#fff;border-radius:20px;padding:40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-icon{width:52px;height:52px;background:#8B1A2F;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;margin:0 auto 10px}
+.login-logo h1{font-size:24px;font-weight:900;color:#1E3528;letter-spacing:-.5px}
+.login-logo p{font-size:13px;color:#666;margin-top:3px}
+.login-footer{text-align:center;margin-top:20px;font-size:12px;color:#999}
+
+/* ── ALERTS ── */
+.alert{padding:11px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;font-weight:600}
+.alert-error{background:rgba(218,54,51,.1);border:1px solid rgba(218,54,51,.3);color:#c0302d}
+.alert-ok{background:rgba(46,160,67,.1);border:1px solid rgba(46,160,67,.3);color:#1E7820}
+
+/* ── SETTINGS ── */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.setting-card{padding:18px}
+.setting-key{font-size:12px;font-family:monospace;color:#8B1A2F;font-weight:700;margin-bottom:4px}
+.setting-desc{margin-bottom:10px}
+.setting-input{width:100%;background:#f5f5f5;border:1.5px solid #e0e0e0;border-radius:8px;padding:9px 12px;font-size:13px;color:#111;outline:none;transition:border-color .15s;font-family:inherit}
+.setting-input:focus{border-color:#8B1A2F}
+
+/* ── USER ROW ── */
+.user-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.user-row:last-child{border-bottom:none}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:#8B1A2F;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;flex-shrink:0}
+
+/* ── UTILITIES ── */
+.text-muted{color:#888}
+.text-bordeaux{color:#8B1A2F}
+.fw-600{font-weight:600}
+.fw-700{font-weight:700}
+.small{font-size:12px}
+.font-mono{font-family:monospace}
+.ml-auto{margin-left:auto}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;z-index:100;transition:left .25s}
+  body.sidebar-open .sidebar{left:0}
+  .menu-toggle{display:block}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .charts-row{flex-direction:column}
+  .content{padding:16px}
+}
