@@ -1,415 +1,258 @@
-# Documentation – RUSHIFY Client Léger
-
-**Plateforme B2B de ventes flash alimentaires**  
-Version 1.0 | Technologies : PHP 8.3 · MySQL 8.4 · HTML/CSS/JS
-
----
-
-## Sommaire
-
-1. [Présentation du projet](#1-présentation)
-2. [Installation et lancement](#2-installation)
-3. [Structure du projet](#3-structure)
-4. [Pages et fonctionnalités](#4-pages)
-5. [Panel d'administration](#5-administration)
-6. [Documentation API](#6-api)
-7. [Base de données](#7-base-de-données)
-
----
-
-## 1. Présentation
-
-RUSHIFY est une plateforme web B2B permettant aux professionnels alimentaires de publier des **ventes flash** de produits en surplus et de les réserver en temps réel.
-
-**Objectif** : Réduire le gaspillage alimentaire en connectant vendeurs et acheteurs professionnels.
-
-**Utilisateurs cibles** : Restaurateurs, traiteurs, grossistes, professionnels alimentaires.
-
----
-
-## 2. Installation
-
-### Prérequis
-- PHP 8.3+
-- MySQL 8.4+
-- Serveur web (Apache/Nginx) ou PHP built-in server
-
-### Étapes
-
-```bash
-# 1. Cloner le repository
-git clone https://github.com/soumeyamsr/PROJET-CLIENT-L-GER-
-
-# 2. Configurer la base de données
-# Copier config/database.example.php → config/database.php
-# Modifier les identifiants MySQL
-
-# 3. Importer le schéma SQL
-mysql -u root rushify_db < sql/rushify.sql
-
-# 4. Lancer le serveur
-php -S localhost:8888 -t .
-```
-
-### Identifiants admin par défaut
-| Champ | Valeur |
-|---|---|
-| Identifiant | `superadmin` |
-| Mot de passe | `Admin@Rushify2025` |
-
----
-
-## 3. Structure du projet
-
-```
-rushify/
-├── index.php              → Page d'accueil
-├── register.php           → Inscription
-├── login.php              → Connexion
-├── logout.php             → Déconnexion
-├── dashboard.php          → Tableau de bord utilisateur
-├── add-product.php        → Ajouter/modifier un produit
-├── flash-sales.php        → Marketplace des ventes flash
-├── create-flash-sale.php  → Créer une vente flash
-├── reserve.php            → Réserver une vente flash
-├── my-reservations.php    → Mes réservations
-├── cgv.php                → Conditions générales
-│
-├── admin/                 → Panel d'administration
-│   ├── index.php          → Dashboard admin
-│   ├── users.php          → Gestion utilisateurs
-│   ├── flash-sales.php    → Gestion ventes flash
-│   ├── reservations.php   → Gestion réservations
-│   ├── audit.php          → Journal d'audit
-│   └── settings.php       → Paramètres
-│
-├── api/
-│   └── ai-recognition.php → API reconnaissance IA
-│
-├── config/
-│   └── database.php       → Configuration BDD
-│
-├── includes/
-│   ├── auth.php           → Authentification (sessions)
-│   └── functions.php      → Fonctions utilitaires
-│
-├── assets/
-│   ├── css/style.css      → Styles globaux
-│   └── js/main.js         → JavaScript
-│
-└── sql/
-    └── rushify.sql        → Schéma base de données
-```
+Documentation - RUSHIFY Client Leger
+Plateforme B2B de ventes flash alimentaires
+Version 1.0 - PHP 8.3 / MySQL 8.4 / HTML / CSS / JavaScript
 
----
 
-## 4. Pages et fonctionnalités
+---------------------------------------------------------------
+PRESENTATION DU PROJET
+---------------------------------------------------------------
 
-### 4.1 Page d'accueil (`index.php`)
+RUSHIFY est un site web destiné aux professionnels de l'alimentation. Il permet de publier des ventes flash sur des produits en surplus et de les réserver en temps réel. L'objectif principal est de réduire le gaspillage alimentaire en mettant en contact les vendeurs et les acheteurs du secteur.
 
-La landing page présente la plateforme avec :
-- **Hero plein écran** avec photo de fond animée
-- **Section avantages** avec sac animé style TGTG
-- **Bande défilante** des catégories de produits
-- **Section démo** avec mockup téléphone interactif
-- **Grille de fonctionnalités** (6 features)
-- **Section "Comment ça marche"** (3 étapes)
-- **Call-to-action** final
+Tous les utilisateurs peuvent à la fois vendre leurs propres surplus et acheter ceux des autres. Pour accéder à la plateforme, il faut obligatoirement être un professionnel et avoir un numéro SIRET valide.
 
-📸 *[Screenshot : Page d'accueil]*
 
----
+---------------------------------------------------------------
+INSTALLATION ET LANCEMENT
+---------------------------------------------------------------
 
-### 4.2 Inscription (`register.php`)
+Ce qu'il faut avant de commencer :
+- PHP 8.3 ou plus récent
+- MySQL 8.4
+- Un serveur web ou le serveur intégré de PHP
 
-Formulaire d'inscription avec :
-- **Nom de l'entreprise** et **nom complet**
-- **Adresse** professionnelle
-- **Numéro SIRET** (14 chiffres, validé par algorithme de Luhn)
-- **Téléphone** et **Email**
-- **Mot de passe** avec indicateur de force
-- **Acceptation des CGV** (obligatoire)
+Pour installer le projet, cloner le repository GitHub puis copier le fichier config/database.example.php en config/database.php et y renseigner les identifiants MySQL.
 
-**Validations côté serveur :**
-- Vérification unicité email + SIRET
-- Validation format SIRET (algorithme de Luhn)
-- Hashage bcrypt du mot de passe (coût 12)
+Ensuite importer le schéma de la base de données :
 
-📸 *[Screenshot : Page d'inscription]*
+    mysql -u root rushify_db < sql/rushify.sql
 
----
+Et lancer le serveur :
 
-### 4.3 Connexion (`login.php`)
+    php -S localhost:8888 -t .
 
-- Connexion par email + mot de passe
-- Session PHP sécurisée
-- Redirection automatique si déjà connecté
+Le site est alors accessible sur http://localhost:8888
 
-📸 *[Screenshot : Page de connexion]*
+Il y a aussi un fichier RUSHIFY - Lancer le site.bat sur le Bureau qui démarre automatiquement MySQL et PHP en double-cliquant dessus.
 
----
+Les identifiants du panel d'administration :
+    Identifiant : superadmin
+    Mot de passe : Admin@Rushify2025
 
-### 4.4 Tableau de bord (`dashboard.php`)
 
-Interface principale après connexion :
-- **Carte d'impact** : revenus générés, kg sauvés, CO₂ évité, niveau de gamification
-- **Bannière streak** : jours d'activité consécutifs
-- **Badges** : streak, kg sauvés, ventes actives, revenus
-- **4 cartes KPI** : produits en stock, ventes flash actives, réservations, CO₂ évité
-- **Tableau des produits** avec actions (modifier, créer une flash)
-- **Tableau des ventes flash** récentes
+---------------------------------------------------------------
+STRUCTURE DU PROJET
+---------------------------------------------------------------
 
-📸 *[Screenshot : Tableau de bord]*
+Le projet est organisé de façon classique pour une application PHP :
 
----
+    rushify/
+        index.php              -> page d'accueil
+        register.php           -> inscription
+        login.php              -> connexion
+        logout.php             -> deconnexion
+        dashboard.php          -> tableau de bord utilisateur
+        add-product.php        -> ajouter ou modifier un produit
+        flash-sales.php        -> marketplace des ventes flash
+        create-flash-sale.php  -> creer une vente flash
+        reserve.php            -> reserver une vente flash
+        my-reservations.php    -> mes reservations
+        cgv.php                -> conditions generales
 
-### 4.5 Ajout de produit (`add-product.php`)
+        admin/                 -> panel d'administration
+            index.php          -> dashboard admin
+            users.php          -> gestion des utilisateurs
+            flash-sales.php    -> gestion des ventes flash
+            reservations.php   -> gestion des reservations
+            audit.php          -> journal d'audit
+            settings.php       -> parametres de l'application
 
-Formulaire avec **reconnaissance IA** :
-1. Upload photo (glisser-déposer ou clic)
-2. L'IA analyse l'image et propose : nom, catégorie, unité, description
-3. Clic sur une suggestion → remplit automatiquement le formulaire
-4. Compléter : quantité, prix, date limite de consommation
-5. Enregistrer
+        api/
+            ai-recognition.php -> endpoint de reconnaissance IA
 
-**Upload sécurisé :**
-- Vérification MIME réelle (pas seulement l'extension)
-- Renommage aléatoire (`uniqid()`)
-- `.htaccess` bloquant l'exécution PHP dans `/uploads`
+        config/
+            database.php       -> connexion a la base de donnees
 
-📸 *[Screenshot : Ajout produit avec IA]*
+        includes/
+            auth.php           -> gestion des sessions et authentification
+            functions.php      -> fonctions utilitaires partagees
 
----
+        assets/
+            css/style.css      -> styles globaux
+            js/main.js         -> javascript
 
-### 4.6 Marketplace des ventes flash (`flash-sales.php`)
+        sql/
+            rushify.sql        -> schema complet de la base de donnees
 
-- **Grille de cartes** avec photo, prix original barré, prix flash, timer
-- **Filtres** : recherche textuelle, catégorie, tri (expire bientôt, remise, prix)
-- **Barre de progression** de réservation sur chaque carte
-- **Badge de réduction** calculé automatiquement
-- **Timer en temps réel** (JavaScript)
 
-📸 *[Screenshot : Marketplace ventes flash]*
+---------------------------------------------------------------
+LES DIFFERENTES PAGES
+---------------------------------------------------------------
 
----
 
-### 4.7 Création d'une vente flash (`create-flash-sale.php`)
+PAGE D'ACCUEIL
 
-- Sélection d'un produit du stock
-- Définition du **prix flash** (doit être inférieur au prix normal)
-- **Aperçu en temps réel** de la carte
-- Choix de la **quantité disponible** et de la **durée**
-- Notification automatique à tous les utilisateurs
+La page d'accueil est la vitrine du site. Elle s'ouvre sur une grande photo en plein ecran avec le titre du site et deux boutons pour s'inscrire ou voir les offres. En faisant defiler la page on trouve une section avec le sac anime et les avantages de la plateforme, une bande qui defiles en continu avec les categories de produits, une section de demonstration interactive avec un mockup de telephone, une grille qui presente les six fonctionnalites principales, une section qui explique comment ca marche en trois etapes, et un bouton d'appel a l'action en bas de page.
 
-📸 *[Screenshot : Créer une vente flash]*
 
----
+PAGE D'INSCRIPTION
 
-### 4.8 Réservation (`reserve.php`)
+Le formulaire d'inscription demande le nom de l'entreprise, le nom complet du responsable, l'adresse, le numero SIRET, le telephone, l'email et un mot de passe. Il y a aussi une case a cocher pour accepter les conditions generales, sans laquelle il est impossible de creer un compte.
 
-- Résumé de la vente flash (photo, prix, vendeur)
-- Timer en temps réel
-- Saisie de la **quantité à réserver**
-- **Calcul automatique** du total
-- Confirmation et notification au vendeur
+Le SIRET est verifie automatiquement via l'algorithme de Luhn. L'unicite de l'email et du SIRET est aussi verifiee pour eviter les doublons. Le mot de passe est hache avec bcrypt avant d'etre stocke en base.
 
-📸 *[Screenshot : Page de réservation]*
 
----
+PAGE DE CONNEXION
 
-### 4.9 Mes réservations (`my-reservations.php`)
+Formulaire simple avec email et mot de passe. Une session PHP est creee apres connexion reussie. Si l'utilisateur est deja connecte, il est redirige directement vers son tableau de bord.
 
-Historique des réservations avec :
-- Nom de la vente flash et du vendeur
-- Quantité et prix payé
-- **Contact téléphonique** du vendeur
-- Statut de la réservation
 
-📸 *[Screenshot : Mes réservations]*
+TABLEAU DE BORD
 
----
+C'est l'interface principale apres connexion. En haut se trouve une grande carte verte qui affiche les revenus generes, les kilos de produits sauves, le CO2 evite et le niveau de gamification atteint. Il y a aussi une banniere qui montre le streak de jours d'activite consecutive.
 
-## 5. Administration
+En dessous on trouve quatre cartes de statistiques, les produits en stock avec la possibilite de les modifier ou de creer une vente flash directement depuis le tableau, et les ventes flash recentes avec leur statut.
 
-Accessible sur `http://localhost:8888/admin` — **réservé aux administrateurs**.
 
-### 5.1 Dashboard admin
+PAGE D'AJOUT DE PRODUIT
 
-- **5 KPIs** : utilisateurs, ventes flash actives, réservations, revenus, signalements
-- **Graphique revenus** sur 30 jours (Chart.js)
-- **Graphique donut** par catégorie
-- **Top vendeurs**
-- **Dernières inscriptions**
+C'est une des pages les plus importantes. Elle integre la reconnaissance par intelligence artificielle. Quand l'utilisateur uploade une photo de son produit, l'API analyse l'image et propose automatiquement un nom, une categorie, une unite et une description. Il suffit de cliquer sur une suggestion pour remplir le formulaire. L'utilisateur peut ensuite ajuster les informations, ajouter la quantite, le prix et la date limite de consommation avant d'enregistrer.
 
-📸 *[Screenshot : Dashboard admin]*
+L'upload est securise : le type MIME reel du fichier est verifie, le fichier est renomme aleatoirement et un fichier .htaccess empeche l'execution de scripts dans le dossier d'upload.
 
----
 
-### 5.2 Gestion utilisateurs (`admin/users.php`)
+MARKETPLACE DES VENTES FLASH
 
-- Liste paginée (20 par page)
-- **Recherche** par nom, email, SIRET
-- **Vérifier** ou **suspendre** un compte
-- **Supprimer** un compte (SUPER_ADMIN uniquement)
-- Affichage du nombre de produits et de ventes par utilisateur
+Cette page liste toutes les ventes flash actives sous forme de cartes. Chaque carte affiche la photo du produit, le prix original barre, le prix flash, un compte a rebours en temps reel, une barre de progression montrant le pourcentage deja reserve, et un bouton pour reserver.
 
-📸 *[Screenshot : Gestion utilisateurs]*
+Il y a des filtres pour rechercher par nom, filtrer par categorie et trier par date d'expiration, prix ou pourcentage de remise.
 
----
 
-### 5.3 Gestion ventes flash (`admin/flash-sales.php`)
+CREATION D'UNE VENTE FLASH
 
-- Liste de toutes les ventes flash avec statut coloré
-- **Barre de progression** des réservations
-- **Filtres** par statut et recherche
-- **Annuler** ou **supprimer** une vente
+L'utilisateur selectionne un produit de son stock, definit un prix flash inferieur au prix normal, choisit la quantite disponible, la commande minimale et les dates de debut et de fin. Un apercu de la carte se met a jour en temps reel pendant la saisie. Une fois publiee, une notification est envoyee a tous les autres utilisateurs de la plateforme.
 
-📸 *[Screenshot : Gestion ventes flash admin]*
 
----
+PAGE DE RESERVATION
 
-### 5.4 Journal d'audit (`admin/audit.php`)
+Quand un utilisateur clique sur Reserver, il arrive sur une page qui affiche le detail de la vente flash, les informations du vendeur, un compte a rebours et un formulaire pour indiquer la quantite souhaitee. Le total se calcule automatiquement. Apres confirmation, le vendeur est notifie et le stock disponible est mis a jour en temps reel.
 
-Traçabilité complète :
-- Toutes les actions admin (LOGIN, UPDATE, DELETE, CREATE)
-- Date, heure, admin concerné, ressource modifiée
-- Badges colorés par type d'action
 
-📸 *[Screenshot : Journal d'audit]*
+MES RESERVATIONS
 
----
+Historique de toutes les reservations effectuees par l'utilisateur. Pour chaque reservation on voit le nom de la vente, le vendeur, la quantite, le total paye, le numero de telephone du vendeur pour organiser le retrait, et le statut.
 
-### 5.5 Paramètres (`admin/settings.php`)
 
-Configuration de l'application :
-- `site_name` : nom de la plateforme
-- `maintenance_mode` : activer/désactiver
-- `max_flash_duration_h` : durée maximale d'une vente flash
-- `min_discount_percent` : remise minimale
-- `commission_rate` : taux de commission
+---------------------------------------------------------------
+PANEL D'ADMINISTRATION
+---------------------------------------------------------------
 
-📸 *[Screenshot : Paramètres admin]*
+Le panel d'administration est accessible sur /admin et est reserve aux administrateurs. Il est completement separe de la partie utilisateur.
 
----
 
-## 6. API
+DASHBOARD ADMIN
 
-### 6.1 Reconnaissance IA des produits
+La page principale du panel affiche cinq chiffres cles en haut : le nombre total d'utilisateurs, les ventes flash actives, les reservations, les revenus et les signalements en attente. En dessous se trouvent un graphique des revenus sur les trente derniers jours, un graphique en donut par categorie de produits, un tableau des meilleurs vendeurs et la liste des dernieres inscriptions.
 
-**Endpoint :** `POST /api/ai-recognition.php`
 
-**Authentification :** Session PHP requise (utilisateur connecté)
+GESTION DES UTILISATEURS
 
-**Requête :**
-```
-Content-Type: multipart/form-data
-Body: image (fichier JPG/PNG/WEBP, max 5 Mo)
-```
+Liste paginee de tous les comptes avec une barre de recherche pour filtrer par nom, email ou SIRET. Pour chaque utilisateur on peut voir le nombre de produits et de ventes flash qu'il a crees. Les actions disponibles sont la verification du compte et la suppression definitive.
 
-**Réponse JSON :**
-```json
-{
-  "source": "java-ai | php-fallback",
-  "suggestions": [
+
+GESTION DES VENTES FLASH
+
+Liste de toutes les ventes flash avec leur statut colore, leur prix, le pourcentage de stock reserve et la date d'expiration. Un administrateur peut annuler ou supprimer une vente flash depuis cette page.
+
+
+JOURNAL D'AUDIT
+
+Chaque action faite par un administrateur est enregistree automatiquement avec la date, l'heure, l'admin concerne, le type d'action et une description. Ca permet de savoir qui a fait quoi et quand sur la plateforme.
+
+
+PARAMETRES
+
+Cette page permet de modifier les reglages de l'application : le nom de la plateforme, activer ou desactiver le mode maintenance, la duree maximale d'une vente flash, la remise minimale obligatoire et le taux de commission.
+
+
+---------------------------------------------------------------
+DOCUMENTATION DE L'API
+---------------------------------------------------------------
+
+Le site dispose d'un endpoint d'intelligence artificielle pour la reconnaissance de produits alimentaires a partir d'une photo.
+
+Endpoint : POST /api/ai-recognition.php
+
+Pour appeler cet endpoint il faut etre connecte. La requete doit etre en multipart/form-data et contenir un champ image avec le fichier photo au format JPG, PNG ou WEBP, d'une taille maximale de 5 Mo.
+
+La reponse est au format JSON :
+
     {
-      "name": "Saumon atlantique",
-      "category": "Poissons & Fruits de mer",
-      "unit": "kg",
-      "description": "Poisson frais du jour.",
-      "confidence": 0.88
+      "source": "java-ai ou php-fallback",
+      "suggestions": [
+        {
+          "name": "Saumon atlantique",
+          "category": "Poissons et Fruits de mer",
+          "unit": "kg",
+          "description": "Poisson frais du jour.",
+          "confidence": 0.88
+        }
+      ]
     }
-  ]
-}
-```
 
-**Codes de retour :**
-| Code | Signification |
-|---|---|
-| 200 | Succès, suggestions retournées |
-| 400 | Image manquante ou format invalide |
-| 401 | Non authentifié |
-| 405 | Méthode non autorisée (GET interdit) |
-| 415 | Format MIME non supporté |
+Les codes de retour possibles sont 200 quand tout va bien, 400 si l'image est manquante ou invalide, 401 si l'utilisateur n'est pas connecte, 405 si la methode n'est pas POST, et 415 si le format du fichier n'est pas supporte.
 
-**Fonctionnement :**
-1. Tente d'appeler le microservice Java (Spring Boot, port 8080)
-2. En cas d'échec → fallback PHP intégré
-3. Le fallback analyse la couleur dominante de l'image (bibliothèque GD)
-4. Mappe la teinte HSB sur une taxonomie alimentaire (12 catégories)
+Comment ca fonctionne : l'API essaie d'abord d'appeler un microservice Java qui tourne sur le port 8080. Si ce service n'est pas disponible, un systeme de secours integre en PHP prend le relais. Ce systeme analyse la couleur dominante de l'image grace a la bibliotheque GD, convertit cette couleur en teinte HSB et la fait correspondre a une categorie alimentaire dans une base de connaissances de douze categories.
 
-**Exemple d'appel JavaScript :**
-```javascript
-const formData = new FormData();
-formData.append('image', fileInput.files[0]);
+Exemple d'utilisation en JavaScript :
 
-fetch('/api/ai-recognition.php', {
-    method: 'POST',
-    body: formData
-})
-.then(r => r.json())
-.then(data => {
-    data.suggestions.forEach(s => {
-        console.log(`${s.name} (${Math.round(s.confidence*100)}%)`);
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+
+    fetch('/api/ai-recognition.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        data.suggestions.forEach(s => {
+            console.log(s.name + ' - ' + Math.round(s.confidence * 100) + '%');
+        });
     });
-});
-```
 
----
 
-## 7. Base de données
+---------------------------------------------------------------
+BASE DE DONNEES
+---------------------------------------------------------------
 
-### Tables principales
+La base de donnees rushify_db contient neuf tables principales.
 
-| Table | Description |
-|---|---|
-| `users` | Comptes professionnels (SIRET, email, mot de passe hashé) |
-| `products` | Produits en stock de chaque utilisateur |
-| `flash_sales` | Ventes flash publiées |
-| `reservations` | Réservations effectuées |
-| `notifications` | Alertes envoyées aux utilisateurs |
-| `admin_users` | Comptes administrateurs |
-| `admin_roles` | Rôles admin (SUPER_ADMIN, ADMIN, MODERATOR) |
-| `admin_audit_log` | Journal de toutes les actions admin |
-| `app_settings` | Paramètres de l'application |
+La table users stocke les comptes professionnels avec leur SIRET, email, mot de passe hache et statut de verification.
 
-### Schéma simplifié
+La table products contient les produits en stock de chaque utilisateur avec la categorie, l'unite, la quantite, le prix et la date limite de consommation.
 
-```
-users (1) ──────< products (N)
-users (1) ──────< flash_sales (N)  via seller_id
-users (1) ──────< reservations (N) via buyer_id
-flash_sales (1) < reservations (N)
-flash_sales (1) ─── products (1)
-admin_users (N) >── admin_roles (1)
-admin_users (1) ──< admin_audit_log (N)
-```
+La table flash_sales enregistre toutes les ventes flash avec le vendeur, le produit concerne, les prix, les quantites disponibles et reservees, et les dates de debut et de fin.
 
-### Vue SQL dashboard
+La table reservations garde l'historique de toutes les reservations avec l'acheteur, la vente flash concernee, la quantite et le montant total.
 
-```sql
-CREATE VIEW vw_dashboard_stats AS
-SELECT
-  (SELECT COUNT(*) FROM users)                          AS total_users,
-  (SELECT COUNT(*) FROM users WHERE DATE(created_at)=CURDATE()) AS new_users_today,
-  (SELECT COUNT(*) FROM flash_sales WHERE status='active')      AS active_flash_sales,
-  (SELECT COUNT(*) FROM flash_sales)                    AS total_flash_sales,
-  (SELECT COUNT(*) FROM reservations)                   AS total_reservations,
-  (SELECT COALESCE(SUM(total_price),0) FROM reservations WHERE status!='cancelled') AS total_revenue,
-  (SELECT COUNT(*) FROM reports_signalement WHERE status='pending') AS pending_reports;
-```
+La table notifications stocke les alertes envoyees aux utilisateurs.
 
----
+Les tables admin_users, admin_roles, admin_permissions et admin_audit_log gerent les comptes administrateurs, leurs droits et la tracabilite de leurs actions.
 
-## Sécurité
+La table app_settings stocke les parametres de configuration de l'application.
 
-| Risque | Protection |
-|---|---|
-| Injection SQL | PDO + requêtes préparées partout |
-| XSS | `htmlspecialchars()` sur tous les affichages |
-| Upload malveillant | Vérification MIME réelle + `.htaccess` |
-| Mots de passe | Bcrypt coût 12 |
-| Accès non autorisé | `requireLogin()` sur chaque page protégée |
+Il y a aussi une vue SQL nommee vw_dashboard_stats qui calcule en temps reel tous les chiffres affiches sur le dashboard admin.
 
----
+Les relations principales : un utilisateur peut avoir plusieurs produits, plusieurs ventes flash et plusieurs reservations. Une vente flash appartient a un seul vendeur et concerne un seul produit. Une reservation concerne une seule vente flash et un seul acheteur.
 
-*Documentation RUSHIFY v1.0 — Projet académique EFREI*
+
+---------------------------------------------------------------
+SECURITE
+---------------------------------------------------------------
+
+Toutes les requetes SQL utilisent PDO avec des requetes preparees pour eviter les injections SQL. Toutes les donnees affichees passent par htmlspecialchars pour eviter les attaques XSS. Les mots de passe sont hasches avec bcrypt avec un cout de 12. L'upload de fichiers est securise par verification du type MIME reel et par un fichier .htaccess qui bloque l'execution de PHP dans le dossier d'upload. Chaque page protegee verifie la session via la fonction requireLogin avant d'afficher quoi que ce soit.
+
+
+---------------------------------------------------------------
+Documentation RUSHIFY Client Leger v1.0 - Projet academique EFREI
+---------------------------------------------------------------
