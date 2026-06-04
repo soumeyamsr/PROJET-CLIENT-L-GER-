@@ -1,18 +1,23 @@
 -- ============================================================
---  RUSHIFY – Schéma de base de données
---  Version 1.0
+--  RUSHIFY – Schéma complet de la base de données
+--  Version 1.0 – PHP 8.3 / MySQL 8.4
 -- ============================================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+SET NAMES utf8mb4;
 
 CREATE DATABASE IF NOT EXISTS `rushify_db`
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 USE `rushify_db`;
 
+-- ============================================================
+-- PARTIE UTILISATEURS
+-- ============================================================
+
 -- ------------------------------------------------------------
--- Utilisateurs (professionnels alimentaires — peuvent acheter ET vendre)
+-- Comptes professionnels (vendeurs et acheteurs)
 -- ------------------------------------------------------------
 CREATE TABLE `users` (
   `id`              INT(11)       NOT NULL AUTO_INCREMENT,
@@ -36,7 +41,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
--- Produits en stock
+-- Produits en stock des utilisateurs
 -- ------------------------------------------------------------
 CREATE TABLE `products` (
   `id`            INT(11)         NOT NULL AUTO_INCREMENT,
@@ -58,7 +63,7 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
--- Ventes Flash
+-- Ventes flash publiées par les utilisateurs
 -- ------------------------------------------------------------
 CREATE TABLE `flash_sales` (
   `id`                 INT(11)       NOT NULL AUTO_INCREMENT,
@@ -81,12 +86,12 @@ CREATE TABLE `flash_sales` (
   KEY `idx_fs_product` (`product_id`),
   KEY `idx_fs_status`  (`status`),
   KEY `idx_fs_expires` (`expires_at`),
-  CONSTRAINT `fk_fs_seller`  FOREIGN KEY (`seller_id`)  REFERENCES `users`     (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_fs_product` FOREIGN KEY (`product_id`) REFERENCES `products`  (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_fs_seller`  FOREIGN KEY (`seller_id`)  REFERENCES `users`    (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_fs_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
--- Réservations
+-- Réservations effectuées par les acheteurs
 -- ------------------------------------------------------------
 CREATE TABLE `reservations` (
   `id`             INT(11)       NOT NULL AUTO_INCREMENT,
@@ -107,7 +112,7 @@ CREATE TABLE `reservations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
--- Notifications
+-- Notifications envoyées aux utilisateurs
 -- ------------------------------------------------------------
 CREATE TABLE `notifications` (
   `id`         INT(11)      NOT NULL AUTO_INCREMENT,
@@ -123,7 +128,103 @@ CREATE TABLE `notifications` (
   CONSTRAINT `fk_notif_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Données démo
-INSERT INTO `users` (`company_name`,`full_name`,`address`,`siret`,`phone`,`email`,`password`,`role`,`cgv_accepted`,`cgv_accepted_at`) VALUES
-('Le Bistrot Parisien','Jean Dupont','12 rue de Rivoli, 75001 Paris','12345678901234','+33612345678','jean@bistrot-parisien.fr','$2y$12$demohashedpassword111','professionnel',1,NOW()),
-('Saveurs du Marché','Marie Lambert','45 avenue Victor Hugo, 69002 Lyon','98765432109876','+33698765432','marie@saveurs-marche.fr','$2y$12$demohashedpassword222','professionnel',1,NOW());
+
+-- ============================================================
+-- PARTIE ADMINISTRATION
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- Rôles des administrateurs
+-- ------------------------------------------------------------
+CREATE TABLE `admin_roles` (
+  `id`         INT(11)      NOT NULL AUTO_INCREMENT,
+  `name`       VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- Comptes administrateurs
+-- ------------------------------------------------------------
+CREATE TABLE `admin_users` (
+  `id`            INT(11)      NOT NULL AUTO_INCREMENT,
+  `role_id`       INT(11)      NOT NULL,
+  `username`      VARCHAR(100) NOT NULL,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `full_name`     VARCHAR(255) NOT NULL,
+  `is_active`     TINYINT(1)   NOT NULL DEFAULT 1,
+  `last_login_at` TIMESTAMP    NULL DEFAULT NULL,
+  `created_at`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_admin_username` (`username`),
+  KEY `idx_admin_role` (`role_id`),
+  CONSTRAINT `fk_admin_role` FOREIGN KEY (`role_id`) REFERENCES `admin_roles` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- Journal d'audit – toutes les actions des admins
+-- ------------------------------------------------------------
+CREATE TABLE `admin_audit_log` (
+  `id`          INT(11)      NOT NULL AUTO_INCREMENT,
+  `admin_id`    INT(11)      NOT NULL,
+  `action`      VARCHAR(100) NOT NULL,
+  `resource`    VARCHAR(100) NOT NULL,
+  `resource_id` VARCHAR(50)  DEFAULT NULL,
+  `description` TEXT         DEFAULT NULL,
+  `ip_address`  VARCHAR(45)  DEFAULT NULL,
+  `created_at`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_audit_admin` (`admin_id`),
+  KEY `idx_audit_date`  (`created_at`),
+  CONSTRAINT `fk_audit_admin` FOREIGN KEY (`admin_id`) REFERENCES `admin_users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- Paramètres de configuration de l'application
+-- ------------------------------------------------------------
+CREATE TABLE `app_settings` (
+  `id`          INT(11)      NOT NULL AUTO_INCREMENT,
+  `setting_key` VARCHAR(100) NOT NULL,
+  `value`       TEXT         DEFAULT NULL,
+  `type`        ENUM('string','integer','boolean') NOT NULL DEFAULT 'string',
+  `description` TEXT         DEFAULT NULL,
+  `updated_by`  INT(11)      DEFAULT NULL,
+  `updated_at`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_setting_key` (`setting_key`),
+  CONSTRAINT `fk_settings_admin` FOREIGN KEY (`updated_by`) REFERENCES `admin_users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ============================================================
+-- VUE – Statistiques du dashboard admin (calculées en temps réel)
+-- ============================================================
+CREATE OR REPLACE VIEW `vw_dashboard_stats` AS
+SELECT
+  (SELECT COUNT(*)                          FROM users)                                          AS total_users,
+  (SELECT COUNT(*)                          FROM users        WHERE DATE(created_at) = CURDATE()) AS new_users_today,
+  (SELECT COUNT(*)                          FROM flash_sales  WHERE status = 'active' AND expires_at > NOW()) AS active_flash_sales,
+  (SELECT COUNT(*)                          FROM flash_sales)                                    AS total_flash_sales,
+  (SELECT COUNT(*)                          FROM reservations WHERE status != 'cancelled')        AS total_reservations,
+  (SELECT COALESCE(SUM(total_price), 0)     FROM reservations WHERE status != 'cancelled')        AS total_revenue,
+  0                                                                                               AS pending_reports;
+
+
+-- ============================================================
+-- DONNÉES DE DÉMO
+-- ============================================================
+
+INSERT INTO `admin_roles` (`name`) VALUES ('superadmin'), ('moderateur');
+
+-- Mot de passe admin : à définir via script séparé (bcrypt)
+-- Les identifiants ne sont pas stockés ici pour des raisons de sécurité
+
+INSERT INTO `users` (`company_name`,`full_name`,`address`,`siret`,`phone`,`email`,`password`,`role`,`is_verified`,`cgv_accepted`,`cgv_accepted_at`) VALUES
+('Le Bistrot Parisien','Jean Dupont','12 rue de Rivoli, 75001 Paris','12345678901234','+33612345678','jean@bistrot-parisien.fr','$2y$12$demohashedpassword111','professionnel',1,1,NOW()),
+('Saveurs du Marché','Marie Lambert','45 avenue Victor Hugo, 69002 Lyon','98765432109876','+33698765432','marie@saveurs-marche.fr','$2y$12$demohashedpassword222','professionnel',1,1,NOW());
+
+INSERT INTO `app_settings` (`setting_key`,`value`,`type`,`description`) VALUES
+('site_name',       'RUSHIFY',  'string',  'Nom de la plateforme'),
+('maintenance_mode','0',        'boolean', 'Activer le mode maintenance'),
+('max_flash_duration','72',     'integer', 'Durée maximale d\'une vente flash (heures)'),
+('min_discount',    '10',       'integer', 'Remise minimale obligatoire (%)'),
+('commission_rate', '5',        'integer', 'Taux de commission plateforme (%)');
