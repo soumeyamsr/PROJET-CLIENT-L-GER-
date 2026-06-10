@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $buyers = $pdo->query("SELECT id FROM users WHERE id != {$user['id']}")->fetchAll();
         foreach ($buyers as $b) {
             addNotification($pdo, $b['id'], '⚡ Nouvelle vente flash !',
-                ""{$data['title']}" vient d'être publiée par {$user['company_name']}.", 'info', 'flash-sales.php');
+                "\"{$data['title']}\" vient d'être publiée par {$user['company_name']}.", 'info', 'flash-sales.php');
         }
         header('Location: flash-sales.php?created=1');
         exit;
