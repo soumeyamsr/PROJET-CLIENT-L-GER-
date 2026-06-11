@@ -75,6 +75,26 @@ function addNotification(PDO $pdo, int $userId, string $title, string $message, 
     $stmt->execute([$userId, $title, $message, $type, $link]);
 }
 
+function parseUserAgent(?string $ua): string {
+    if (!$ua) return 'Appareil inconnu';
+
+    $os = 'OS inconnu';
+    if (preg_match('/Windows/i', $ua))        $os = 'Windows';
+    elseif (preg_match('/Android/i', $ua))    $os = 'Android';
+    elseif (preg_match('/iPhone|iPad/i', $ua)) $os = 'iOS';
+    elseif (preg_match('/Mac OS X/i', $ua))   $os = 'macOS';
+    elseif (preg_match('/Linux/i', $ua))      $os = 'Linux';
+
+    $browser = 'Navigateur inconnu';
+    if (preg_match('/Edg\//i', $ua))         $browser = 'Edge';
+    elseif (preg_match('/OPR\/|Opera/i', $ua)) $browser = 'Opera';
+    elseif (preg_match('/Chrome\//i', $ua))  $browser = 'Chrome';
+    elseif (preg_match('/Firefox\//i', $ua)) $browser = 'Firefox';
+    elseif (preg_match('/Safari\//i', $ua))  $browser = 'Safari';
+
+    return "$browser sur $os";
+}
+
 function jsonResponse(array $data, int $code = 200): void {
     http_response_code($code);
     header('Content-Type: application/json; charset=utf-8');

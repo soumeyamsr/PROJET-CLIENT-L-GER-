@@ -42,7 +42,9 @@ $reservations = $stmt->fetchAll();
       <a href="dashboard.php" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
       <a href="flash-sales.php" class="sidebar-link"><span class="icon">⚡</span> Ventes Flash</a>
       <a href="my-reservations.php" class="sidebar-link active"><span class="icon">🛒</span> Mes Réservations</a>
+      <a href="seller-reservations.php" class="sidebar-link"><span class="icon">📥</span> Réservations reçues</a>
       <a href="add-product.php" class="sidebar-link"><span class="icon">📦</span> Ajouter un produit</a>
+      <a href="login-history.php" class="sidebar-link"><span class="icon">🔒</span> Connexions</a>
     </nav>
   </aside>
   <main class="main-content">

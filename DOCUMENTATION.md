@@ -55,6 +55,8 @@ Le projet est organisé de façon classique pour une application PHP :
         create-flash-sale.php  -> creer une vente flash
         reserve.php            -> reserver une vente flash
         my-reservations.php    -> mes reservations
+        seller-reservations.php -> reservations recues, accepter/refuser
+        login-history.php      -> historique des connexions
         cgv.php                -> conditions generales
 
         admin/                 -> panel d'administration
@@ -141,6 +143,20 @@ MES RESERVATIONS
 Historique de toutes les reservations effectuees par l'utilisateur. Pour chaque reservation on voit le nom de la vente, le vendeur, la quantite, le total paye, le numero de telephone du vendeur pour organiser le retrait, et le statut.
 
 
+RESERVATIONS RECUES
+
+Cette page liste les reservations que les autres utilisateurs ont faites sur les ventes flash du vendeur connecte. Pour chaque reservation en attente, le vendeur peut cliquer sur Accepter ou Refuser.
+
+Accepter passe la reservation au statut confirme et previent l'acheteur par notification. Refuser passe la reservation au statut annule, remet automatiquement la quantite reservee disponible dans la vente flash (et la repasse en active si elle etait marquee epuisee), et previent egalement l'acheteur.
+
+
+HISTORIQUE DE CONNEXION
+
+Cette page affiche les connexions recentes au compte de l'utilisateur : date, adresse IP, appareil/navigateur utilise et statut (reussie ou echouee). Elle permet a l'utilisateur de detecter une connexion suspecte sur son compte. Si des tentatives echouees ont eu lieu dans les 7 derniers jours, un message d'alerte invite l'utilisateur a changer son mot de passe.
+
+Chaque tentative de connexion (reussie ou echouee avec un email existant) est automatiquement enregistree dans la table login_history lors de l'appel a la fonction login.
+
+
 ---------------------------------------------------------------
 PANEL D'ADMINISTRATION
 ---------------------------------------------------------------
@@ -223,7 +239,7 @@ Exemple d'utilisation en JavaScript :
 BASE DE DONNEES
 ---------------------------------------------------------------
 
-La base de donnees rushify_db contient neuf tables principales.
+La base de donnees rushify_db contient dix tables principales.
 
 La table users stocke les comptes professionnels avec leur SIRET, email, mot de passe hache et statut de verification.
 
@@ -234,6 +250,8 @@ La table flash_sales enregistre toutes les ventes flash avec le vendeur, le prod
 La table reservations garde l'historique de toutes les reservations avec l'acheteur, la vente flash concernee, la quantite et le montant total.
 
 La table notifications stocke les alertes envoyees aux utilisateurs.
+
+La table login_history garde une trace de chaque connexion (reussie ou echouee) avec l'utilisateur concerne, l'adresse IP, l'appareil utilise et la date.
 
 Les tables admin_users, admin_roles, admin_permissions et admin_audit_log gerent les comptes administrateurs, leurs droits et la tracabilite de leurs actions.
 

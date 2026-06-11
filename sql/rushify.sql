@@ -112,6 +112,22 @@ CREATE TABLE `reservations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
+-- Historique des connexions des utilisateurs
+-- ------------------------------------------------------------
+CREATE TABLE `login_history` (
+  `id`         INT(11)      NOT NULL AUTO_INCREMENT,
+  `user_id`    INT(11)      NOT NULL,
+  `ip_address` VARCHAR(45)  NOT NULL,
+  `user_agent` VARCHAR(255) DEFAULT NULL,
+  `status`     ENUM('success','failed') NOT NULL DEFAULT 'success',
+  `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_login_user` (`user_id`),
+  KEY `idx_login_date` (`created_at`),
+  CONSTRAINT `fk_login_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
 -- Notifications envoyées aux utilisateurs
 -- ------------------------------------------------------------
 CREATE TABLE `notifications` (

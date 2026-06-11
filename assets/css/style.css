@@ -137,21 +137,176 @@ img { max-width: 100%; display: block; }
 .sb-label  { font-size: 13px; color: #666666; }
 .sb-sep { width: 1px; height: 44px; background: var(--border); }
 
-/* ── Bag section ── */
-.bag-section { padding: 80px 0 60px; }
-.bag-layout { display: grid; grid-template-columns: 1fr 320px 1fr; align-items: center; gap: 16px; max-width: 1000px; margin: 0 auto; }
-.bag-side { display: flex; flex-direction: column; gap: 52px; }
-.bag-side.left  { align-items: flex-end; }
-.bag-side.right { align-items: flex-start; }
-.bag-benefit { display: flex; align-items: flex-start; gap: 14px; max-width: 260px; }
-.bag-benefit.flip { flex-direction: row-reverse; text-align: right; }
-.bb-icon { width: 40px; height: 40px; flex-shrink: 0; }
-.bb-text p { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; line-height: 1.5; margin: 0; }
-.bb-text strong { display: block; font-size: 13px; font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: .3px; margin: 3px 0; }
-.bag-center-wrap { display: flex; justify-content: center; align-items: center; }
-.bag-anim { animation: bagBounce 5s ease-in-out infinite; filter: drop-shadow(0 24px 40px rgba(0,0,0,.5)); transform-origin: center 80%; }
-.bag-svg-el { width: 300px; height: auto; display: block; }
-.bag-floor { width: 180px; height: 14px; background: rgba(139,26,47,.1); border-radius: 50%; margin: -4px auto 0; filter: blur(8px); animation: floorPulse 5s ease-in-out infinite; }
+/* ── Bag section v2 ── */
+.bag-section {
+  padding: 80px 0 72px;
+  background: linear-gradient(160deg, #f4f7f5 0%, #ffffff 60%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.bag-v2-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* ── Visuel sac ── */
+.bag-v2-visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bag-v2-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 340px; height: 340px;
+  background: radial-gradient(circle, rgba(28,90,60,.13) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.bag-v2-svg {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+  animation: bagBounce 5s ease-in-out infinite;
+  filter: drop-shadow(0 28px 44px rgba(0,0,0,.22));
+  transform-origin: center 80%;
+}
+
+.bag-v2-shadow {
+  width: 160px; height: 14px;
+  background: rgba(28,90,60,.18);
+  border-radius: 50%;
+  margin: -6px auto 0;
+  filter: blur(9px);
+  animation: floorPulse 5s ease-in-out infinite;
+  position: relative; z-index: 0;
+}
+
+/* Badges flottants */
+.bag-v2-float-badge {
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(0,0,0,.1);
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.bag-v2-badge-eco   { top: 6%; left: -8%; animation: nbfloat 3.8s ease-in-out infinite; }
+.bag-v2-badge-price { bottom: 28%; right: -10%; background: var(--primary); color: #fff; border-color: var(--primary); animation: nbfloat 3.8s ease-in-out infinite .9s; }
+.bag-v2-badge-local { top: 40%; left: -12%; animation: nbfloat 3.8s ease-in-out infinite 1.7s; }
+
+/* ── CTA Pull ── */
+.bag-v2-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bag-v2-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+  width: fit-content;
+  letter-spacing: .3px;
+}
+
+.bag-v2-title {
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.15;
+  letter-spacing: -.5px;
+  margin-bottom: 14px;
+}
+
+.bag-v2-title span { color: var(--primary); }
+
+.bag-v2-desc {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 24px;
+  max-width: 400px;
+}
+
+.bag-v2-benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.bag-v2-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.bag-v2-check {
+  width: 24px; height: 24px;
+  background: rgba(46,160,67,.15);
+  color: #2EA043;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  flex-shrink: 0;
+}
+
+.bag-v2-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.bag-v2-pull-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 6px 24px rgba(139,26,47,.25);
+  transition: all .2s ease;
+}
+
+.bag-v2-pull-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(139,26,47,.35);
+}
+
+.bag-v2-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: .2px;
+}
+
 @keyframes bagBounce { 0%,100%{transform:translateY(0) rotate(-1.5deg) scale(1)} 30%{transform:translateY(-14px) rotate(1deg) scale(1.02)} 60%{transform:translateY(-20px) rotate(-1deg) scale(1.025)} 80%{transform:translateY(-8px) rotate(.5deg) scale(1.01)} }
 @keyframes floorPulse { 0%,100%{transform:scaleX(1);opacity:.8} 50%{transform:scaleX(.6);opacity:.25} }
 
@@ -381,6 +536,9 @@ tr:hover td { background: var(--bg-card2); }
 .badge-expired  { background: rgba(218,54,51,.2);  color: #ff8b89; }
 .badge-pending  { background: rgba(210,153,34,.2); color: #f5c842; }
 .badge-sold_out { background: rgba(132,141,151,.2);color: var(--text-muted); }
+.badge-confirmed { background: rgba(46,160,67,.2);  color: #5de38c; }
+.badge-cancelled { background: rgba(218,54,51,.2);  color: #ff8b89; }
+.badge-completed { background: rgba(132,141,151,.2);color: var(--text-muted); }
 .upload-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; transition: all var(--transition); }
 .upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: rgba(139,26,47,.04); }
 .upload-icon { font-size: 40px; margin-bottom: 12px; }
@@ -449,7 +607,51 @@ tr:hover td { background: var(--bg-card2); }
 .mt-2{margin-top:16px} .mt-3{margin-top:24px} .mb-2{margin-bottom:16px} .mb-3{margin-bottom:24px}
 .d-flex{display:flex} .align-center{align-items:center} .gap-2{gap:16px} .justify-between{justify-content:space-between}
 
-@media(max-width:1024px){.hero .container{grid-template-columns:1fr}.hero-visual{display:none}.stats-grid{grid-template-columns:repeat(2,1fr)}.features-grid{grid-template-columns:repeat(2,1fr)}.footer-inner{grid-template-columns:1fr 1fr}.reserve-layout{grid-template-columns:1fr}.bag-layout{grid-template-columns:1fr;justify-items:center;gap:24px;max-width:360px}.bag-side{gap:20px;align-items:center}.bag-benefit,.bag-benefit.flip{flex-direction:column;align-items:center;text-align:center}.demo-layout{grid-template-columns:1fr}}
-@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg-card);border-bottom:1px solid var(--border);padding:12px;z-index:99}.nav-toggle{display:block}.dashboard-layout{flex-direction:column}.sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border-light)}.stats-grid{grid-template-columns:1fr 1fr}.features-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.hiw-steps{flex-direction:column;align-items:center}.hiw-sep{width:1px;height:32px;margin:0}.main-content{padding:20px 16px}}
-@media(max-width:480px){.stats-grid{grid-template-columns:1fr}.footer-inner{grid-template-columns:1fr}.badges-row{flex-direction:column}}
+@media(max-width:1024px){
+  .hero .container{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .reserve-layout{grid-template-columns:1fr}
+  .bag-v2-layout{grid-template-columns:1fr;gap:40px;max-width:520px}
+  .bag-v2-visual{max-width:300px;margin:0 auto}
+  .bag-v2-badge-local{left:-2%}
+  .bag-v2-badge-eco{left:0%}
+  .bag-v2-badge-price{right:-2%}
+  .bag-v2-cta{align-items:center;text-align:center}
+  .bag-v2-title{text-align:center}
+  .bag-v2-desc{text-align:center;margin-left:auto;margin-right:auto}
+  .bag-v2-eyebrow{margin-left:auto;margin-right:auto}
+  .bag-v2-benefits{align-items:flex-start;max-width:360px;margin-left:auto;margin-right:auto}
+  .bag-v2-actions{justify-content:center}
+  .demo-layout{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg-card);border-bottom:1px solid var(--border);padding:12px;z-index:99}
+  .nav-toggle{display:block}
+  .dashboard-layout{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border-light)}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .features-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .hiw-steps{flex-direction:column;align-items:center}
+  .hiw-sep{width:1px;height:32px;margin:0}
+  .main-content{padding:20px 16px}
+  .bag-section{padding:56px 0 48px}
+  .bag-v2-layout{gap:28px}
+  .bag-v2-float-badge{font-size:11px;padding:6px 12px}
+  .bag-v2-badge-local{display:none}
+  .bag-v2-pull-btn{width:100%;justify-content:center}
+  .bag-v2-actions{flex-direction:column;width:100%}
+  .bag-v2-actions .btn{width:100%;justify-content:center}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  .badges-row{flex-direction:column}
+  .bag-v2-title{font-size:1.7rem}
+  .bag-v2-float-badge{display:none}
+}
 

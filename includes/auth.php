@@ -19,6 +19,13 @@ function getCurrentUser(PDO $pdo): ?array {
     return $stmt->fetch() ?: null;
 }
 
+function recordLoginAttempt(PDO $pdo, int $userId, string $status): void {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    $ua = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255);
+    $stmt = $pdo->prepare('INSERT INTO login_history (user_id, ip_address, user_agent, status) VALUES (?,?,?,?)');
+    $stmt->execute([$userId, $ip, $ua, $status]);
+}
+
 function login(PDO $pdo, string $email, string $password): bool {
     $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
     $stmt->execute([$email]);
@@ -27,7 +34,11 @@ function login(PDO $pdo, string $email, string $password): bool {
         $_SESSION['user_id']      = $user['id'];
         $_SESSION['user_name']    = $user['company_name'];
         $_SESSION['user_role']    = $user['role'];
+        recordLoginAttempt($pdo, $user['id'], 'success');
         return true;
+    }
+    if ($user) {
+        recordLoginAttempt($pdo, $user['id'], 'failed');
     }
     return false;
 }
